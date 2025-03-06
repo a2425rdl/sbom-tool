@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Sbom.Api.FormatValidator;
+using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;
 using Microsoft.Sbom.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +22,8 @@ public class FormatValidatorTests
         using (var sbomStream = CreateStream(FormatValidatorTestStrings.JsonSuitableForRedaction))
         {
             var sbom = new ValidatedSbom(sbomStream);
-            var rawspdx = await sbom.GetRawSPDXDocument();
+            // Future: Refactor to support SPDX 3.0
+            var rawspdx = await sbom.GetRawSPDXDocument() as FormatEnforcedSPDX2;
             var details = await sbom.GetValidationResults();
 
             Assert.AreEqual(FormatValidationStatus.Valid, details.Status);
@@ -31,8 +33,8 @@ public class FormatValidatorTests
             Assert.AreEqual("CC0-1.0", rawspdx.DataLicense);
             Assert.AreEqual("sbom-tool 1.0.0", rawspdx.Name);
             Assert.AreEqual("https://microsoft.com/sbom-tool/test/sbom-tool/1.0.0/cuK7iCCPVEuSmgBfeFPc-g", rawspdx.DocumentNamespace);
-            Assert.AreEqual("2024-05-08T15:58:25Z", rawspdx.CreationInfo.Created);
-            Assert.IsNotNull(rawspdx.CreationInfo.Creators);
+            Assert.AreEqual("2024-05-08T15:58:25Z", rawspdx.Created);
+            Assert.IsNotNull(rawspdx.Creators);
             Assert.IsNotNull(rawspdx.DocumentDescribes);
         }
     }
@@ -107,7 +109,8 @@ public class FormatValidatorTests
         using (var sbomStream = CreateStream(SpdxExemplars.JsonSpdx23Exemplar))
         {
             var sbom = new ValidatedSbom(sbomStream);
-            var rawspdx = await sbom.GetRawSPDXDocument();
+            // Future: Refactor to support SPDX 3.0
+            var rawspdx = await sbom.GetRawSPDXDocument() as FormatEnforcedSPDX2;
             var details = await sbom.GetValidationResults();
 
             Assert.AreEqual(FormatValidationStatus.Valid, details.Status);

@@ -10,6 +10,7 @@ using Microsoft.Sbom.Api.FormatValidator;
 using Microsoft.Sbom.Api.Workflows.Helpers;
 using Microsoft.Sbom.Common;
 using Microsoft.Sbom.Common.Config;
+using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;  // Future: Api should not be dependent on Spdx22SbomParser
 using Serilog;
 
 namespace Microsoft.Sbom.Api.Workflows;
@@ -63,7 +64,8 @@ public class SbomRedactionWorkflow : IWorkflow<SbomRedactionWorkflow>
                 {
                     log.Information($"Redacting SBOM {sbomPath}");
                     var outputPath = GetOutputPath(sbomPath);
-                    var redactedSpdx = await this.sbomRedactor.RedactSbomAsync(validatedSbom);
+                    // Future: Refactor to support SPDX 3.0
+                    var redactedSpdx = (await this.sbomRedactor.RedactSbomAsync(validatedSbom)) as FormatEnforcedSPDX2;
                     using (var outStream = fileSystemUtils.OpenWrite(outputPath))
                     {
                         await JsonSerializer.SerializeAsync(outStream, redactedSpdx);

@@ -3,7 +3,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.Sbom.Api.FormatValidator;
-using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;
+using Microsoft.Sbom.Contracts;
 
 namespace Microsoft.Sbom.Api.Workflows.Helpers;
 
@@ -12,5 +12,5 @@ namespace Microsoft.Sbom.Api.Workflows.Helpers;
 /// </summary>
 public interface ISbomRedactor
 {
-    public Task<FormatEnforcedSPDX2> RedactSbomAsync(IValidatedSbom sbom);
+    public Task<SbomRequiredProperties> RedactSbomAsync(IValidatedSbom sbom);
 }

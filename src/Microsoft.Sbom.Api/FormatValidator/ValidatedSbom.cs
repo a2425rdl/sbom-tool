@@ -10,7 +10,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
-using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;
+using Microsoft.Sbom.Contracts;
+using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;  // Future: Api should not be dependent on Spdx22SbomParser
 using Microsoft.Sbom.Utils;
 
 public class ValidatedSbom: IValidatedSbom
@@ -38,7 +39,7 @@ public class ValidatedSbom: IValidatedSbom
         return ValidationDetails;
     }
 
-    public async Task<FormatEnforcedSPDX2> GetRawSPDXDocument()
+    public async Task<SbomRequiredProperties> GetRawSPDXDocument()
     {
         await Initialize();
 
@@ -148,9 +149,9 @@ public class ValidatedSbom: IValidatedSbom
             description.Add("------------------------------");
             description.Add($"SPDX Version: {sbom.Version}");
             description.Add($"Name: {sbom.Name}");
-            description.Add($"Created: {sbom.CreationInfo?.Created}");
+            description.Add($"Created: {sbom.Created}");
 
-            foreach (var creator in sbom.CreationInfo?.Creators)
+            foreach (var creator in sbom.Creators)
             {
                 description.Add($"Creator: {creator}");
             }

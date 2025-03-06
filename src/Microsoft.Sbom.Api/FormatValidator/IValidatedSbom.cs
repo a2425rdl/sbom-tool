@@ -5,11 +5,11 @@ namespace Microsoft.Sbom.Api.FormatValidator;
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;
+using Microsoft.Sbom.Contracts;
 
 public interface IValidatedSbom: IDisposable
 {
     public Task<FormatValidationResults> GetValidationResults();
 
-    public Task<FormatEnforcedSPDX2> GetRawSPDXDocument();
+    public Task<SbomRequiredProperties> GetRawSPDXDocument();
 }

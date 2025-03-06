@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -7,7 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Sbom.Api.FormatValidator;
 using Microsoft.Sbom.Common.Utils;
-using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;
+using Microsoft.Sbom.Contracts;
+using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities; // Future: Api should not be dependent on Spdx22SbomParser
 using Serilog;
 
 namespace Microsoft.Sbom.Api.Workflows.Helpers;
@@ -27,9 +28,11 @@ public class SbomRedactor: ISbomRedactor
         this.log = log ?? throw new ArgumentNullException(nameof(log));
     }
 
-    public virtual async Task<FormatEnforcedSPDX2> RedactSbomAsync(IValidatedSbom sbom)
+    public virtual async Task<SbomRequiredProperties> RedactSbomAsync(IValidatedSbom sbom)
     {
-        var spdx = await sbom.GetRawSPDXDocument();
+        // Future: Refactor to support SPDX 3.0
+        var spdx = (await sbom.GetRawSPDXDocument()) as FormatEnforcedSPDX2 ??
+            throw new ArgumentException("Redaction is only supported for SPDX 2.2 files.", nameof(sbom));
 
         if (spdx.Files != null)
         {
@@ -88,7 +91,7 @@ public class SbomRedactor: ISbomRedactor
 
     private void UpdateDocumentNamespace(FormatEnforcedSPDX2 spdx)
     {
-        if (!string.IsNullOrWhiteSpace(spdx.DocumentNamespace) && spdx.CreationInfo.Creators.Any(c => c.StartsWith("Tool: Microsoft.SBOMTool", StringComparison.OrdinalIgnoreCase)))
+        if (!string.IsNullOrWhiteSpace(spdx.DocumentNamespace) && spdx.Creators.Any(c => c.StartsWith("Tool: Microsoft.SBOMTool", StringComparison.OrdinalIgnoreCase)))
         {
             var existingNamespaceComponents = spdx.DocumentNamespace.Split('/');
             var uniqueComponent = IdentifierUtils.GetShortGuid(Guid.NewGuid());

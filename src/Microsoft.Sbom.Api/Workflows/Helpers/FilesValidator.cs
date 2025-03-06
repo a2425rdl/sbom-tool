@@ -11,8 +11,8 @@ using Microsoft.Sbom.Api.Executors;
 using Microsoft.Sbom.Api.Manifest.FileHashes;
 using Microsoft.Sbom.Common.Config;
 using Microsoft.Sbom.Entities;
-using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;
-using Microsoft.Sbom.Parsers.Spdx30SbomParser.Entities;
+using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;  // Future: Api should not be dependent on Spdx22SbomParser
+using Microsoft.Sbom.Parsers.Spdx30SbomParser.Entities;  // Future: Api should not be dependent on Spdx30SbomParser
 using Microsoft.Sbom.Utils;
 using Serilog;
 

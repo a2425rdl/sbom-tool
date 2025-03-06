@@ -34,7 +34,6 @@ using Microsoft.Sbom.Contracts.Enums;
 using Microsoft.Sbom.Extensions;
 using Microsoft.Sbom.Extensions.Entities;
 using Microsoft.Sbom.JsonAsynchronousNodeKit;
-using Microsoft.Sbom.Parsers.Spdx22SbomParser.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Serilog.Events;
 
@@ -99,7 +98,7 @@ public class InterfaceConcretionTests
     private class PinnedIValidatedSBOM : IValidatedSbom
     {
         public void Dispose() => throw new NotImplementedException();
-        public Task<FormatEnforcedSPDX2> GetRawSPDXDocument() => throw new NotImplementedException();
+        public Task<SbomRequiredProperties> GetRawSPDXDocument() => throw new NotImplementedException();
         public Task<FormatValidationResults> GetValidationResults() => throw new NotImplementedException();
     }
 
@@ -196,7 +195,7 @@ public class InterfaceConcretionTests
 
     private class PinnedISbomRedactor : ISbomRedactor
     {
-        public Task<FormatEnforcedSPDX2> RedactSbomAsync(IValidatedSbom sbom) => throw new NotImplementedException();
+        public Task<SbomRequiredProperties> RedactSbomAsync(IValidatedSbom sbom) => throw new NotImplementedException();
     }
 
     private class PinnedIWorkflow : IWorkflow<PinnedIWorkflow>
